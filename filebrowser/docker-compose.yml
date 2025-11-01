@@ -1,0 +1,14 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    volumes:
+      - ~/Documents:/srv
+      - ~/homelab/filebrowser/database:/database
+      - ~/homelab/filebrowser/settings.json:/config/settings.json
+    environment:
+      - PUID=501
+      - PGID=20
+      - TZ=Asia/Kolkata
+    ports:
+      - 8095:80
