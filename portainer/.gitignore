@@ -1,0 +1,11 @@
+# Runtime data and backups
+/data/
+/backups/
+
+# Local overrides
+docker-compose.override.yml
+.env
+
+# Logs
+*.log
+logs/

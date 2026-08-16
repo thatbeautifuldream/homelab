@@ -4,25 +4,6 @@ A comprehensive homelab setup running self-hosted services using Docker Compose.
 
 ## Services
 
-### Dokploy
-
-Platform as a Service (PaaS) for deploying applications
-
-- Port: 3000
-- Components:
-  - Main application server
-  - PostgreSQL database
-  - Redis for caching
-  - Traefik reverse proxy (ports 80, 443)
-
-### Filebrowser
-
-Web-based file management system
-
-- Port: 8095
-- Mounts: ~/Documents directory for file access
-- Configuration: Custom settings and database stored locally
-
 ### Immich
 
 Self-hosted photo and video backup solution
@@ -48,6 +29,14 @@ Network-wide ad blocking and DNS server
 
 - Ports: 53 (DNS), 80 (HTTP), 443 (HTTPS)
 - Features: Ad blocking, DNS filtering, web interface
+
+### Portainer
+
+Community Edition Docker management UI for creating and managing containers
+
+- Port: 9443 (HTTPS)
+- Features: Local Docker environment management, stacks, volumes, networks, container logs
+- Data: Stored in the `portainer_data` Docker volume
 
 ## Usage
 
