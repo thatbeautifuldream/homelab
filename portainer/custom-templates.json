@@ -1,0 +1,35 @@
+[
+  {
+    "Title": "Immich",
+    "Description": "Self-hosted photo and video backup with machine learning search.",
+    "Note": "Set DB_PASSWORD, UPLOAD_LOCATION, DB_DATA_LOCATION, DB_USERNAME, DB_DATABASE_NAME, and IMMICH_VERSION when deploying the stack. Exposes Immich on port 2283.",
+    "Platform": 1,
+    "Type": 2,
+    "Logo": "https://immich.app/_app/immutable/assets/immich-logo-futo-dark.UAIWaLuX.svg",
+    "ComposeFilePathInRepository": "stacks/immich/compose.yaml",
+    "RepositoryAuthentication": false,
+    "TLSSkipVerify": false
+  },
+  {
+    "Title": "Nginx Proxy Manager",
+    "Description": "Reverse proxy manager with a web UI and Let's Encrypt certificate management.",
+    "Note": "Publishes ports 80, 443, and 81. Do not deploy another service that binds 80/443 on the same host.",
+    "Platform": 1,
+    "Type": 2,
+    "Logo": "https://nginxproxymanager.com/icon.png",
+    "ComposeFilePathInRepository": "stacks/nginx-proxy-manager/compose.yaml",
+    "RepositoryAuthentication": false,
+    "TLSSkipVerify": false
+  },
+  {
+    "Title": "Glance",
+    "Description": "Self-hosted personal dashboard with RSS, videos, weather, markets, releases, and community widgets.",
+    "Note": "Uses the Glance config committed under stacks/glance/config. Exposes the dashboard on port 8080.",
+    "Platform": 1,
+    "Type": 2,
+    "Logo": "https://avatars.githubusercontent.com/u/159397742?v=4",
+    "ComposeFilePathInRepository": "stacks/glance/compose.yaml",
+    "RepositoryAuthentication": false,
+    "TLSSkipVerify": false
+  }
+]

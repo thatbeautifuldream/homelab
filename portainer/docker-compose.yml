@@ -2,9 +2,6 @@ services:
   portainer:
     image: portainer/portainer-ce:lts
     container_name: portainer
-    command:
-      - --templates
-      - https://raw.githubusercontent.com/thatbeautifuldream/homelab/main/portainer/templates/templates-2.0.json
     restart: unless-stopped
     ports:
       - "9443:9443"

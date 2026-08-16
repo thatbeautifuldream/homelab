@@ -1,28 +1,27 @@
 # Homelab Setup
 
-Portainer-first homelab setup. The only container managed directly from this repository is Portainer Community Edition; homelab apps are exposed as custom Portainer App Templates.
+Simple Portainer-managed homelab.
 
-## Portainer
+- Run **Portainer** directly from this repo.
+- Keep app Compose files in `stacks/` as the source of truth.
+- Register those apps as Portainer **Custom Templates** for easy launching.
+- Keep Portainer's built-in App Templates unchanged.
 
-Community Edition Docker management UI for creating and managing containers, stacks, volumes, networks, and logs.
+## Layout
 
-- Port: 9443 (HTTPS)
-- Data: Stored in the `portainer_data` Docker volume
-- Template source: `portainer/templates/templates-2.0.json`
+```text
+portainer/
+  docker-compose.yml            # Portainer CE only
+  custom-templates.json         # Custom template metadata
+  apply-custom-templates.sh     # Syncs custom templates into Portainer
 
-## Custom App Templates
+stacks/
+  immich/compose.yaml
+  nginx-proxy-manager/compose.yaml
+  glance/compose.yaml
+```
 
-The custom template catalog currently includes:
-
-- Immich: self-hosted photo and video backup
-- Nginx Proxy Manager: reverse proxy and Let's Encrypt UI
-- Glance: personal dashboard
-
-Pi-hole was intentionally removed.
-
-## Usage
-
-Start Portainer:
+## Start Portainer
 
 ```bash
 cd portainer
@@ -41,44 +40,64 @@ or:
 https://<server-ip>:9443
 ```
 
-The Portainer container is started with `--templates`, pointing at the raw GitHub URL for this repo's custom template file. On a fresh system, Portainer loads those templates during first startup.
+## Sync Custom Templates
 
-For an existing Portainer install, create an API access token in **My account -> Access tokens**, then run:
+Create an API key in Portainer:
+
+```text
+My account -> Access tokens
+```
+
+Then run:
 
 ```bash
 cd portainer
-PORTAINER_API_KEY=<token> ./apply-templates.sh
+PORTAINER_API_KEY=<token> ./apply-custom-templates.sh
 ```
 
-Optional overrides:
-
-```bash
-PORTAINER_URL=https://portainer.example.com:9443 \
-TEMPLATES_URL=https://raw.githubusercontent.com/thatbeautifuldream/homelab/main/portainer/templates/templates-2.0.json \
-PORTAINER_API_KEY=<token> \
-./apply-templates.sh
-```
-
-## Template Development
-
-Template catalog:
+Custom templates appear here:
 
 ```text
-portainer/templates/templates-2.0.json
+https://localhost:9443/#!/3/docker/templates/custom
 ```
 
-Stack files:
+The script is safe to rerun. It deletes/recreates only these custom templates by title:
+
+- Immich
+- Nginx Proxy Manager
+- Glance
+
+It also restores Portainer's built-in App Templates URL to the default:
 
 ```text
-portainer/templates/stacks/immich/docker-compose.yml
-portainer/templates/stacks/nginx-proxy-manager/docker-compose.yml
-portainer/templates/stacks/glance/docker-compose.yml
+https://raw.githubusercontent.com/portainer/templates/master/templates-2.0.json
 ```
 
-Portainer stack templates must reference a public Git repository and a stack file path inside that repository.
+## Recommended Use
 
-## Environment
+Use **Custom Templates** to launch apps quickly.
 
-- Platform: Docker
-- Location: Local homelab setup
-- Architecture: Portainer-managed containerized deployment
+For apps you care about long-term, create them as **Git-backed Portainer Stacks**:
+
+```text
+Stacks -> Add stack -> Git repository
+Repository URL: https://github.com/thatbeautifuldream/homelab.git
+Repository reference: refs/heads/main
+Compose path: stacks/<app>/compose.yaml
+```
+
+That keeps Git as the source of truth while Portainer manages containers.
+
+## Current Apps
+
+- Immich: photo and video backup
+- Nginx Proxy Manager: reverse proxy and Let's Encrypt UI
+- Glance: personal dashboard
+
+Pi-hole was intentionally removed.
+
+## Notes
+
+- Do not commit real `.env` files or secrets.
+- Keep persistent app data in Docker volumes or explicit host paths.
+- Back up Portainer data and app volumes separately from this repo.
