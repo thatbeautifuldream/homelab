@@ -1,0 +1,78 @@
+{
+  "version": "2",
+  "templates": [
+    {
+      "type": 3,
+      "title": "Immich",
+      "name": "immich",
+      "description": "Self-hosted photo and video backup with machine learning search.",
+      "categories": ["photos", "media"],
+      "platform": "linux",
+      "logo": "https://immich.app/img/immich-logo.svg",
+      "repository": {
+        "url": "https://github.com/thatbeautifuldream/homelab",
+        "stackfile": "portainer/templates/stacks/immich/docker-compose.yml"
+      },
+      "env": [
+        {
+          "name": "IMMICH_VERSION",
+          "label": "Immich image version",
+          "default": "release"
+        },
+        {
+          "name": "UPLOAD_LOCATION",
+          "label": "Photo/video upload path on Docker host",
+          "default": "/opt/homelab/immich/upload"
+        },
+        {
+          "name": "DB_DATA_LOCATION",
+          "label": "PostgreSQL data path on Docker host",
+          "default": "/opt/homelab/immich/postgres"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "label": "PostgreSQL password"
+        },
+        {
+          "name": "DB_USERNAME",
+          "label": "PostgreSQL username",
+          "default": "postgres"
+        },
+        {
+          "name": "DB_DATABASE_NAME",
+          "label": "PostgreSQL database name",
+          "default": "immich"
+        }
+      ],
+      "note": "Uses host bind mounts for media and database data. Set a real DB_PASSWORD before deploying. Exposes Immich on port 2283."
+    },
+    {
+      "type": 3,
+      "title": "Nginx Proxy Manager",
+      "name": "nginx-proxy-manager",
+      "description": "Reverse proxy manager with a web UI and Let's Encrypt certificate management.",
+      "categories": ["proxy", "networking"],
+      "platform": "linux",
+      "logo": "https://nginxproxymanager.com/icon.png",
+      "repository": {
+        "url": "https://github.com/thatbeautifuldream/homelab",
+        "stackfile": "portainer/templates/stacks/nginx-proxy-manager/docker-compose.yml"
+      },
+      "note": "Publishes ports 80, 443, and 81. Do not deploy another service that binds 80/443 on the same host."
+    },
+    {
+      "type": 3,
+      "title": "Glance",
+      "name": "glance",
+      "description": "Self-hosted personal dashboard with RSS, videos, weather, markets, releases, and community widgets.",
+      "categories": ["dashboard"],
+      "platform": "linux",
+      "logo": "https://raw.githubusercontent.com/glanceapp/glance/main/docs/images/logo.png",
+      "repository": {
+        "url": "https://github.com/thatbeautifuldream/homelab",
+        "stackfile": "portainer/templates/stacks/glance/docker-compose.yml"
+      },
+      "note": "Uses the Glance config committed under portainer/templates/stacks/glance/config. Exposes the dashboard on port 8080."
+    }
+  ]
+}

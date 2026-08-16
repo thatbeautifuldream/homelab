@@ -52,7 +52,6 @@
               show-thumbnails: true
             - type: reddit
               subreddit: selfhosted
-              show-thumbnails: true
 
     - size: small
       widgets:
