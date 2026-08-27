@@ -28,42 +28,71 @@
   <main class="isolate mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-5 p-4 sm:p-6 lg:p-8">
     <h1 class="text-3xl font-semibold tracking-tight text-balance text-neutral-50">Homelab</h1>
 
-    <div class="-mx-4 -my-2 overflow-x-auto whitespace-nowrap sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full px-4 py-2 align-middle sm:px-6 lg:px-8">
+    <nav aria-label="Services" class="sm:hidden">
+      <ul role="list" class="divide-y divide-white/10 border-y border-white/10">
+        <li>
+          <a data-service-link data-scheme="https" data-port="9443" href="https://192.168.1.12:9443" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
+            <span>Portainer</span>
+            <span class="shrink-0 text-teal-300">Open</span>
+          </a>
+        </li>
+        <li>
+          <a data-service-link data-scheme="http" data-port="8123" href="http://192.168.1.12:8123" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
+            <span>Home Assistant</span>
+            <span class="shrink-0 text-teal-300">Open</span>
+          </a>
+        </li>
+        <li>
+          <a data-service-link data-scheme="http" data-port="8765" href="http://192.168.1.12:8765" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
+            <span>Glance</span>
+            <span class="shrink-0 text-teal-300">Open</span>
+          </a>
+        </li>
+        <li>
+          <a data-service-link data-scheme="http" data-port="2283" href="http://192.168.1.12:2283" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
+            <span>Immich</span>
+            <span class="shrink-0 text-neutral-500">Idle</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="hidden sm:-mx-6 sm:-my-2 sm:block sm:overflow-x-auto sm:whitespace-nowrap lg:-mx-8">
+      <div class="inline-block min-w-full px-6 py-2 align-middle lg:px-8">
         <table class="w-full">
           <thead>
             <tr class="border-b border-white/10">
-              <th scope="col" class="py-3 pr-4 text-left text-base/7 font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Service</th>
-              <th scope="col" class="px-4 py-3 text-left text-base/7 font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Status</th>
-              <th scope="col" class="py-3 pl-4 text-left text-base/7 font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">URL</th>
+              <th scope="col" class="py-3 pr-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Service</th>
+              <th scope="col" class="px-4 py-3 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Status</th>
+              <th scope="col" class="py-3 pl-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">URL</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-white/10">
             <tr>
-              <td class="py-4 pr-4 text-base/7 font-medium text-neutral-100 sm:text-sm/6">Portainer</td>
-              <td class="px-4 py-4 text-base/7 text-teal-300 sm:text-sm/6">Live</td>
-              <td class="py-4 pl-4 text-base/7 tabular-nums sm:text-sm/6">
+              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Portainer</td>
+              <td class="px-4 py-4 text-teal-300 sm:text-sm/6">Live</td>
+              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
                 <a data-service-link data-scheme="https" data-port="9443" href="https://192.168.1.12:9443" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>https://192.168.1.12:9443</span></a>
               </td>
             </tr>
             <tr>
-              <td class="py-4 pr-4 text-base/7 font-medium text-neutral-100 sm:text-sm/6">Home Assistant</td>
-              <td class="px-4 py-4 text-base/7 text-teal-300 sm:text-sm/6">Live</td>
-              <td class="py-4 pl-4 text-base/7 tabular-nums sm:text-sm/6">
+              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Home Assistant</td>
+              <td class="px-4 py-4 text-teal-300 sm:text-sm/6">Live</td>
+              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
                 <a data-service-link data-scheme="http" data-port="8123" href="http://192.168.1.12:8123" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>http://192.168.1.12:8123</span></a>
               </td>
             </tr>
             <tr>
-              <td class="py-4 pr-4 text-base/7 font-medium text-neutral-100 sm:text-sm/6">Glance</td>
-              <td class="px-4 py-4 text-base/7 text-teal-300 sm:text-sm/6">Live</td>
-              <td class="py-4 pl-4 text-base/7 tabular-nums sm:text-sm/6">
+              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Glance</td>
+              <td class="px-4 py-4 text-teal-300 sm:text-sm/6">Live</td>
+              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
                 <a data-service-link data-scheme="http" data-port="8765" href="http://192.168.1.12:8765" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>http://192.168.1.12:8765</span></a>
               </td>
             </tr>
             <tr>
-              <td class="py-4 pr-4 text-base/7 font-medium text-neutral-100 sm:text-sm/6">Immich</td>
-              <td class="px-4 py-4 text-base/7 text-neutral-500 sm:text-sm/6">Idle</td>
-              <td class="py-4 pl-4 text-base/7 tabular-nums sm:text-sm/6">
+              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Immich</td>
+              <td class="px-4 py-4 text-neutral-500 sm:text-sm/6">Idle</td>
+              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
                 <a data-service-link data-scheme="http" data-port="2283" href="http://192.168.1.12:2283" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>http://192.168.1.12:2283</span></a>
               </td>
             </tr>
@@ -78,7 +107,7 @@
     document.querySelectorAll('[data-service-link]').forEach((link) => {
       const url = `${link.dataset.scheme}://${host}:${link.dataset.port}`;
       link.href = url;
-      link.querySelector('[data-url-label]').textContent = url;
+      link.querySelector('[data-url-label]')?.replaceChildren(url);
     });
   </script>
 </body>
