@@ -1,5 +1,7 @@
 # Homelab Setup
 
+<img width="2002" height="1988" alt="CleanShot 2026-08-28 at 01 09 23@2x" src="https://github.com/user-attachments/assets/95c7371a-e534-4df6-b7bf-027b3ecb21f4" />
+
 Compose-first homelab layout.
 
 - Every app lives under `apps/<app>/`.
