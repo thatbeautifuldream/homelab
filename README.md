@@ -1,30 +1,47 @@
 # Homelab Setup
 
-Simple Portainer-managed homelab.
+Compose-first homelab layout.
 
-- Run **Portainer** directly from this repo.
-- Keep app Compose files in `stacks/` as the source of truth.
-- Register those apps as Portainer **Custom Templates** for easy launching.
-- Keep Portainer's built-in App Templates unchanged.
+- Every app lives under `apps/<app>/`.
+- Each app has its own `compose.yml`.
+- Each app may have a local `.env`; real `.env` files are ignored.
+- Start apps with Docker Compose from the app directory.
+- Use Portainer as a UI for visibility and container operations, not as the source of truth.
 
 ## Layout
 
 ```text
-portainer/
-  docker-compose.yml            # Portainer CE only
-  custom-templates.json         # Custom template metadata
-  apply-custom-templates.sh     # Syncs custom templates into Portainer
+apps/
+  portainer/
+    compose.yml
+    .env
 
-stacks/
-  immich/compose.yaml
-  nginx-proxy-manager/compose.yaml
-  glance/compose.yaml
+  home-assistant/
+    compose.yml
+    .env
+
+  immich/
+    compose.yml
+    .env
+
+  nginx-proxy-manager/
+    compose.yml
+    .env
+
+  glance/
+    compose.yml
+    .env
+    assets/
+    config/
+
+legacy/
+  portainer-custom-templates/
 ```
 
 ## Start Portainer
 
 ```bash
-cd portainer
+cd apps/portainer
 docker compose up -d
 ```
 
@@ -40,56 +57,99 @@ or:
 https://<server-ip>:9443
 ```
 
-## Sync Custom Templates
-
-Create an API key in Portainer:
-
-```text
-My account -> Access tokens
-```
-
-Then run:
+## Start an App
 
 ```bash
-cd portainer
-PORTAINER_API_KEY=<token> ./apply-custom-templates.sh
+cd apps/<app>
+docker compose up -d
 ```
 
-Custom templates appear here:
+Examples:
+
+```bash
+cd apps/home-assistant
+docker compose up -d
+```
+
+```bash
+cd apps/glance
+docker compose up -d
+```
+
+## Portainer Visibility
+
+Portainer can still see and operate on containers started outside Portainer because it mounts:
 
 ```text
-https://localhost:9443/#!/3/docker/templates/custom
+/var/run/docker.sock
 ```
 
-The script is safe to rerun. It deletes/recreates only these custom templates by title:
+That means Portainer can:
 
-- Immich
-- Nginx Proxy Manager
-- Glance
+- show running containers
+- show logs
+- inspect environment, networks, mounts, and ports
+- start, stop, restart, and remove containers
 
-It also restores Portainer's built-in App Templates URL to the default:
+Portainer will not be the source of truth for these apps unless you create Portainer stacks. For this repo, do not create Portainer stacks for normal apps. Change the app's `compose.yml` or `.env`, then redeploy with:
+
+```bash
+cd apps/<app>
+docker compose up -d
+```
+
+
+## Firewall
+
+Open homelab ports with UFW:
+
+```bash
+sudo ./scripts/setup-ufw.sh
+```
+
+Ports:
 
 ```text
-https://raw.githubusercontent.com/portainer/templates/master/templates-2.0.json
+80/tcp    Nginx Proxy Manager HTTP
+443/tcp   Nginx Proxy Manager HTTPS
+81/tcp    Nginx Proxy Manager admin UI
+9443/tcp  Portainer HTTPS UI
+8123/tcp  Home Assistant UI/API
+8080/tcp  Glance dashboard
+2283/tcp  Immich UI/API
 ```
 
-## Recommended Use
+The script does not enable UFW automatically. If this machine is remote, allow SSH before enabling UFW:
 
-Use **Custom Templates** to launch apps quickly.
+```bash
+sudo ufw allow OpenSSH
+sudo ufw enable
+```
 
-For apps you care about long-term, create them as **Git-backed Portainer Stacks**:
+
+## Home Assistant
+
+Home Assistant runs with `network_mode: host`.
+
+Reason: Home Assistant discovery works best with direct host networking for SSDP, HomeKit, Chromecast, and other LAN discovery paths.
+
+After startup:
 
 ```text
-Stacks -> Add stack -> Git repository
-Repository URL: https://github.com/thatbeautifuldream/homelab.git
-Repository reference: refs/heads/main
-Compose path: stacks/<app>/compose.yaml
+http://<server-ip>:8123
 ```
 
-That keeps Git as the source of truth while Portainer manages containers.
+If you add Zigbee, Z-Wave, or another USB radio later, prefer a stable device path:
+
+```yaml
+devices:
+  - /dev/serial/by-id/<device-id>:/dev/serial/by-id/<device-id>
+```
 
 ## Current Apps
 
+- Portainer: Docker management UI
+- Home Assistant: home automation
 - Immich: photo and video backup
 - Nginx Proxy Manager: reverse proxy and Let's Encrypt UI
 - Glance: personal dashboard
@@ -99,5 +159,7 @@ Pi-hole was intentionally removed.
 ## Notes
 
 - Do not commit real `.env` files or secrets.
+- Set `DB_PASSWORD` in `apps/immich/.env` before running Immich.
+- Set `TZ` in `apps/home-assistant/.env` before running Home Assistant.
 - Keep persistent app data in Docker volumes or explicit host paths.
 - Back up Portainer data and app volumes separately from this repo.

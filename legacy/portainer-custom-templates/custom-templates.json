@@ -6,7 +6,7 @@
     "Platform": 1,
     "Type": 2,
     "Logo": "https://immich.app/_app/immutable/assets/immich-logo-futo-dark.UAIWaLuX.svg",
-    "ComposeFilePathInRepository": "stacks/immich/compose.yaml",
+    "ComposeFilePathInRepository": "apps/immich/compose.yml",
     "RepositoryAuthentication": false,
     "TLSSkipVerify": false
   },
@@ -17,18 +17,18 @@
     "Platform": 1,
     "Type": 2,
     "Logo": "https://nginxproxymanager.com/icon.png",
-    "ComposeFilePathInRepository": "stacks/nginx-proxy-manager/compose.yaml",
+    "ComposeFilePathInRepository": "apps/nginx-proxy-manager/compose.yml",
     "RepositoryAuthentication": false,
     "TLSSkipVerify": false
   },
   {
     "Title": "Glance",
     "Description": "Self-hosted personal dashboard with RSS, videos, weather, markets, releases, and community widgets.",
-    "Note": "Uses the Glance config committed under stacks/glance/config. Exposes the dashboard on port 8080.",
+    "Note": "Uses the Glance config committed under apps/glance/config. Exposes the dashboard on port 8080.",
     "Platform": 1,
     "Type": 2,
     "Logo": "https://avatars.githubusercontent.com/u/159397742?v=4",
-    "ComposeFilePathInRepository": "stacks/glance/compose.yaml",
+    "ComposeFilePathInRepository": "apps/glance/compose.yml",
     "RepositoryAuthentication": false,
     "TLSSkipVerify": false
   }
