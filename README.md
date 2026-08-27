@@ -12,6 +12,11 @@ Compose-first homelab layout.
 
 ```text
 apps/
+  home/
+    compose.yml
+    .env
+    public/index.html
+
   portainer/
     compose.yml
     .env
@@ -23,11 +28,6 @@ apps/
   immich/
     compose.yml
     .env
-
-  caddy/
-    compose.yml
-    .env
-    Caddyfile
 
   glance/
     compose.yml
@@ -111,51 +111,19 @@ sudo ./scripts/setup-ufw.sh
 Ports:
 
 ```text
-80/tcp    Caddy HTTP
-443/tcp   Caddy HTTPS
+80/tcp    Homelab index
 9443/tcp  Portainer HTTPS UI
 8123/tcp  Home Assistant UI/API
-8080/tcp  Glance dashboard
+8765/tcp  Glance dashboard
 2283/tcp  Immich UI/API
 ```
 
-Caddy also proxies app hostnames when your router/local DNS points them to this host IP:
+Root index:
 
 ```text
-home.milind.local      -> 192.168.1.12
-portainer.milind.local -> 192.168.1.12
-glance.milind.local    -> 192.168.1.12
-immich.milind.local    -> 192.168.1.12
+http://<server-ip>
+http://home.milind.fyi  # DNS points to this host's Tailscale IP
 ```
-
-For one other computer only, add this to that computer's hosts file:
-
-```text
-192.168.1.12 home.milind.local portainer.milind.local glance.milind.local immich.milind.local
-```
-
-Linux/macOS:
-
-```bash
-sudo sh -c 'echo "192.168.1.12 home.milind.local portainer.milind.local glance.milind.local immich.milind.local" >> /etc/hosts'
-```
-
-Windows PowerShell as Administrator:
-
-```powershell
-Add-Content C:\Windows\System32\drivers\etc\hosts "192.168.1.12 home.milind.local portainer.milind.local glance.milind.local immich.milind.local"
-```
-
-Router/local DNS is better than per-device hosts files when multiple devices need access.
-
-Then use:
-
-```text
-http://home.milind.local
-http://portainer.milind.local
-```
-
-`.local` is mDNS-reserved on many clients. These names still need router/local DNS host overrides; Caddy only handles requests after DNS resolves them to this host.
 
 The script does not enable UFW automatically. If this machine is remote, allow SSH before enabling UFW:
 
@@ -186,10 +154,10 @@ devices:
 
 ## Current Apps
 
+- Home: static server index
 - Portainer: Docker management UI
 - Home Assistant: home automation
 - Immich: photo and video backup
-- Caddy: reverse proxy
 - Glance: personal dashboard
 
 Pi-hole was intentionally removed.

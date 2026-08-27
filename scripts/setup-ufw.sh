@@ -11,11 +11,10 @@ allow_port() {
   ufw allow "${port}/${proto}" comment "homelab: ${label}"
 }
 
-allow_port 80 tcp "caddy http"
-allow_port 443 tcp "caddy https"
+allow_port 80 tcp "homelab index"
 allow_port 9443 tcp "portainer https"
 allow_port 8123 tcp "home assistant"
-allow_port 8080 tcp "glance"
+allow_port 8765 tcp "glance"
 allow_port 2283 tcp "immich"
 
 ufw status verbose

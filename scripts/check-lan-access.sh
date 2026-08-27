@@ -21,13 +21,13 @@ check_http() {
 }
 
 printf '\nLocal endpoint checks by IP:\n'
-check_http "https://${HOST_IP}:9443"
 check_http "http://${HOST_IP}:80"
+check_http "https://${HOST_IP}:9443"
 check_http "http://${HOST_IP}:8123"
 
 if [ "${CHECK_ALL:-0}" = "1" ]; then
   printf '\nOptional app endpoint checks by IP:\n'
-  check_http "http://${HOST_IP}:8080"
+  check_http "http://${HOST_IP}:8765"
   check_http "http://${HOST_IP}:2283"
 fi
 
@@ -35,9 +35,9 @@ cat <<EOF
 
 Run these from another device on the same network:
   ping ${HOST_IP}
+  curl http://${HOST_IP}:80
   curl -k https://${HOST_IP}:9443
   curl http://${HOST_IP}:8123
-  curl http://${HOST_IP}:80
 
 If IP fails: the laptop is not on the same reachable LAN, AP/client isolation is enabled, a VPN/proxy route is intercepting traffic, or a firewall/router rule is blocking peer access.
 EOF

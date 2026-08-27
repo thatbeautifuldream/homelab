@@ -6,11 +6,10 @@ Run from the repo root:
 
 Opened ports:
 
-  80/tcp    Caddy HTTP
-  443/tcp   Caddy HTTPS
+  80/tcp    Homelab index
   9443/tcp  Portainer HTTPS UI
   8123/tcp  Home Assistant UI/API
-  8080/tcp  Glance dashboard
+  8765/tcp  Glance dashboard
   2283/tcp  Immich UI/API
 
 The script adds rules only. It does not enable UFW automatically, because enabling UFW remotely without an SSH allow rule can lock you out.

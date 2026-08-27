@@ -11,20 +11,9 @@
     "TLSSkipVerify": false
   },
   {
-    "Title": "Caddy",
-    "Description": "Simple reverse proxy and static file server.",
-    "Note": "Publishes ports 80 and 443. Configure local DNS records for app hostnames before using hostname-based routes.",
-    "Platform": 1,
-    "Type": 2,
-    "Logo": "https://caddyserver.com/resources/images/caddy-circle-lock.svg",
-    "ComposeFilePathInRepository": "apps/caddy/compose.yml",
-    "RepositoryAuthentication": false,
-    "TLSSkipVerify": false
-  },
-  {
     "Title": "Glance",
     "Description": "Self-hosted personal dashboard with RSS, videos, weather, markets, releases, and community widgets.",
-    "Note": "Uses the Glance config committed under apps/glance/config. Exposes the dashboard on port 8080.",
+    "Note": "Uses the Glance config committed under apps/glance/config. Exposes the dashboard on port 8765.",
     "Platform": 1,
     "Type": 2,
     "Logo": "https://avatars.githubusercontent.com/u/159397742?v=4",
