@@ -128,6 +128,26 @@ glance.milind.local    -> 192.168.1.12
 immich.milind.local    -> 192.168.1.12
 ```
 
+For one other computer only, add this to that computer's hosts file:
+
+```text
+192.168.1.12 home.milind.local portainer.milind.local glance.milind.local immich.milind.local
+```
+
+Linux/macOS:
+
+```bash
+sudo sh -c 'echo "192.168.1.12 home.milind.local portainer.milind.local glance.milind.local immich.milind.local" >> /etc/hosts'
+```
+
+Windows PowerShell as Administrator:
+
+```powershell
+Add-Content C:\Windows\System32\drivers\etc\hosts "192.168.1.12 home.milind.local portainer.milind.local glance.milind.local immich.milind.local"
+```
+
+Router/local DNS is better than per-device hosts files when multiple devices need access.
+
 Then use:
 
 ```text
