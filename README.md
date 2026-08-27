@@ -34,9 +34,6 @@ apps/
     .env
     assets/
     config/
-
-legacy/
-  portainer-custom-templates/
 ```
 
 ## Start Portainer
