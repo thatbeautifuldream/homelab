@@ -11,13 +11,13 @@
     "TLSSkipVerify": false
   },
   {
-    "Title": "Nginx Proxy Manager",
-    "Description": "Reverse proxy manager with a web UI and Let's Encrypt certificate management.",
-    "Note": "Publishes ports 80, 443, and 81. Do not deploy another service that binds 80/443 on the same host.",
+    "Title": "Caddy",
+    "Description": "Simple reverse proxy and static file server.",
+    "Note": "Publishes ports 80 and 443. Configure local DNS records for app hostnames before using hostname-based routes.",
     "Platform": 1,
     "Type": 2,
-    "Logo": "https://nginxproxymanager.com/icon.png",
-    "ComposeFilePathInRepository": "apps/nginx-proxy-manager/compose.yml",
+    "Logo": "https://caddyserver.com/resources/images/caddy-circle-lock.svg",
+    "ComposeFilePathInRepository": "apps/caddy/compose.yml",
     "RepositoryAuthentication": false,
     "TLSSkipVerify": false
   },

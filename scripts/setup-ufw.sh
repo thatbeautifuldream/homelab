@@ -11,9 +11,8 @@ allow_port() {
   ufw allow "${port}/${proto}" comment "homelab: ${label}"
 }
 
-allow_port 80 tcp "nginx-proxy-manager http"
-allow_port 443 tcp "nginx-proxy-manager https"
-allow_port 81 tcp "nginx-proxy-manager admin"
+allow_port 80 tcp "caddy http"
+allow_port 443 tcp "caddy https"
 allow_port 9443 tcp "portainer https"
 allow_port 8123 tcp "home assistant"
 allow_port 8080 tcp "glance"

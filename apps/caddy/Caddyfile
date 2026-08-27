@@ -1,0 +1,32 @@
+{
+	admin off
+}
+
+http://home.{$LOCAL_DOMAIN:milind.local} {
+	reverse_proxy host.docker.internal:8123 {
+		header_up -X-Forwarded-For
+		header_up -X-Forwarded-Host
+		header_up -X-Forwarded-Proto
+	}
+}
+
+http://portainer.{$LOCAL_DOMAIN:milind.local} {
+	reverse_proxy https://host.docker.internal:9443 {
+		header_up Host {upstream_hostport}
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+http://glance.{$LOCAL_DOMAIN:milind.local} {
+	reverse_proxy host.docker.internal:8080
+}
+
+http://immich.{$LOCAL_DOMAIN:milind.local} {
+	reverse_proxy host.docker.internal:2283
+}
+
+:80 {
+	respond "Caddy is running. Configure local DNS records for app hostnames." 200
+}

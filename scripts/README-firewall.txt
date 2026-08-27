@@ -6,9 +6,8 @@ Run from the repo root:
 
 Opened ports:
 
-  80/tcp    Nginx Proxy Manager HTTP
-  443/tcp   Nginx Proxy Manager HTTPS
-  81/tcp    Nginx Proxy Manager admin UI
+  80/tcp    Caddy HTTP
+  443/tcp   Caddy HTTPS
   9443/tcp  Portainer HTTPS UI
   8123/tcp  Home Assistant UI/API
   8080/tcp  Glance dashboard

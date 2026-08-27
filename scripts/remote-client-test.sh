@@ -11,5 +11,6 @@ check() {
 printf 'Testing homelab host by IP: %s\n' "${HOST_IP}"
 check "https://${HOST_IP}:9443"
 check "http://${HOST_IP}:8123"
+check "http://${HOST_IP}:80"
 
 printf '\nIf IP fails: not same reachable LAN, AP/client isolation, VPN/proxy route, or firewall/router block.\n'

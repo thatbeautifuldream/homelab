@@ -24,9 +24,10 @@ apps/
     compose.yml
     .env
 
-  nginx-proxy-manager/
+  caddy/
     compose.yml
     .env
+    Caddyfile
 
   glance/
     compose.yml
@@ -110,14 +111,31 @@ sudo ./scripts/setup-ufw.sh
 Ports:
 
 ```text
-80/tcp    Nginx Proxy Manager HTTP
-443/tcp   Nginx Proxy Manager HTTPS
-81/tcp    Nginx Proxy Manager admin UI
+80/tcp    Caddy HTTP
+443/tcp   Caddy HTTPS
 9443/tcp  Portainer HTTPS UI
 8123/tcp  Home Assistant UI/API
 8080/tcp  Glance dashboard
 2283/tcp  Immich UI/API
 ```
+
+Caddy also proxies app hostnames when your router/local DNS points them to this host IP:
+
+```text
+home.milind.local      -> 192.168.1.12
+portainer.milind.local -> 192.168.1.12
+glance.milind.local    -> 192.168.1.12
+immich.milind.local    -> 192.168.1.12
+```
+
+Then use:
+
+```text
+http://home.milind.local
+http://portainer.milind.local
+```
+
+`.local` is mDNS-reserved on many clients. These names still need router/local DNS host overrides; Caddy only handles requests after DNS resolves them to this host.
 
 The script does not enable UFW automatically. If this machine is remote, allow SSH before enabling UFW:
 
@@ -151,7 +169,7 @@ devices:
 - Portainer: Docker management UI
 - Home Assistant: home automation
 - Immich: photo and video backup
-- Nginx Proxy Manager: reverse proxy and Let's Encrypt UI
+- Caddy: reverse proxy
 - Glance: personal dashboard
 
 Pi-hole was intentionally removed.
