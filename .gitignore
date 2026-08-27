@@ -40,3 +40,10 @@ docker-compose.override.yml
 # Backup directories
 backups/
 */backups/
+
+# Frigate runtime state, secrets, and recordings; only config.yml is source of truth
+apps/frigate/config/*
+!apps/frigate/config/config.yml
+apps/frigate/media/
+apps/frigate/mosquitto/data/
+apps/frigate/mosquitto/log/

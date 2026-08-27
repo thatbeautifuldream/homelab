@@ -12,6 +12,11 @@ printf 'Testing homelab host by IP: %s\n' "${HOST_IP}"
 check "http://${HOST_IP}:80"
 check "https://${HOST_IP}:9443"
 check "http://${HOST_IP}:8123"
+if [ "${CHECK_ALL:-0}" = "1" ]; then
+  check "http://${HOST_IP}:8765"
+  check "http://${HOST_IP}:2283"
+  check "http://${HOST_IP}:8971"
+fi
 
 cat <<EOF
 
@@ -19,6 +24,7 @@ Expected browser URLs:
   http://${HOST_IP}
   https://${HOST_IP}:9443
   http://${HOST_IP}:8123
+  http://${HOST_IP}:8971
 
 If IP fails: not same reachable LAN, AP/client isolation, VPN/proxy route, or firewall/router block.
 EOF

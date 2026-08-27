@@ -11,6 +11,9 @@ Opened ports:
   8123/tcp  Home Assistant UI/API
   8765/tcp  Glance dashboard
   2283/tcp  Immich UI/API
+  8971/tcp  Frigate authenticated UI/API
+  8555/tcp  Frigate WebRTC
+  8555/udp  Frigate WebRTC
 
 The script adds rules only. It does not enable UFW automatically, because enabling UFW remotely without an SSH allow rule can lock you out.
 
@@ -29,3 +32,4 @@ If the client is Windows PowerShell:
   Test-NetConnection 192.168.1.12 -Port 9443
   Test-NetConnection 192.168.1.12 -Port 8123
 
+  Test-NetConnection 192.168.1.12 -Port 8971

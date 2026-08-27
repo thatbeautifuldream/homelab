@@ -1,0 +1,123 @@
+mqtt:
+  enabled: true
+  host: mqtt
+  port: 1883
+
+# Keep LAN setup simple. Put Frigate behind a reverse proxy or Tailscale
+# before exposing it outside the private network.
+tls:
+  enabled: false
+
+auth:
+  enabled: true
+
+ffmpeg:
+  hwaccel_args: preset-vaapi
+
+detectors:
+  ov:
+    type: openvino
+    device: AUTO
+
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+record:
+  enabled: true
+  motion:
+    days: 3
+  alerts:
+    retain:
+      days: 14
+      mode: motion
+  detections:
+    retain:
+      days: 14
+      mode: motion
+
+snapshots:
+  enabled: true
+  retain:
+    default: 14
+
+objects:
+  track:
+    - person
+    - car
+    - bicycle
+    - motorcycle
+    - dog
+    - cat
+
+cameras:
+  laptop_webcam:
+    enabled: true
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+    ffmpeg:
+      hwaccel_args: []
+      output_args:
+        record: preset-record-mjpeg
+      inputs:
+        - path: /dev/video0
+          input_args:
+            - -f
+            - v4l2
+            - -input_format
+            - mjpeg
+            - -video_size
+            - 1280x720
+            - -framerate
+            - "10"
+          roles:
+            - detect
+            - record
+
+  logitech_c920:
+    enabled: true
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+    ffmpeg:
+      hwaccel_args: []
+      output_args:
+        record: preset-record-mjpeg
+      inputs:
+        - path: /dev/logitech-c920
+          input_args:
+            - -f
+            - v4l2
+            - -input_format
+            - mjpeg
+            - -video_size
+            - 1280x720
+            - -framerate
+            - "10"
+          roles:
+            - detect
+            - record
+
+
+  front_door:
+    enabled: false
+    detect:
+      width: 1280
+      height: 720
+      fps: 5
+    ffmpeg:
+      inputs:
+        - path: rtsp://user:password@192.168.1.50:554/stream1
+          roles:
+            - detect
+            - record
+version: 0.17-0

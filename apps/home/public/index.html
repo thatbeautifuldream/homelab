@@ -26,80 +26,34 @@
 </head>
 <body class="min-h-dvh bg-neutral-950 font-sans text-neutral-100">
   <main class="isolate mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-5 p-4 sm:p-6 lg:p-8">
-    <h1 class="text-3xl font-semibold tracking-tight text-balance text-neutral-50">Homelab</h1>
+    <div class="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+      <h1 class="text-3xl font-semibold tracking-tight text-balance text-neutral-50">Homelab</h1>
+      <p id="status-meta" class="text-sm/6 text-neutral-500">Checking Docker status…</p>
+    </div>
 
     <nav aria-label="Services" class="sm:hidden">
-      <ul role="list" class="divide-y divide-white/10 border-y border-white/10">
-        <li>
-          <a data-service-link data-scheme="https" data-port="9443" href="https://192.168.1.12:9443" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
-            <span>Portainer</span>
-            <span class="shrink-0 text-teal-300">Open</span>
-          </a>
-        </li>
-        <li>
-          <a data-service-link data-scheme="http" data-port="8123" href="http://192.168.1.12:8123" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
-            <span>Home Assistant</span>
-            <span class="shrink-0 text-teal-300">Open</span>
-          </a>
-        </li>
-        <li>
-          <a data-service-link data-scheme="http" data-port="8765" href="http://192.168.1.12:8765" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
-            <span>Glance</span>
-            <span class="shrink-0 text-teal-300">Open</span>
-          </a>
-        </li>
-        <li>
-          <a data-service-link data-scheme="http" data-port="2283" href="http://192.168.1.12:2283" class="flex min-h-16 items-center justify-between gap-4 py-3 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
-            <span>Immich</span>
-            <span class="shrink-0 text-neutral-500">Idle</span>
-          </a>
-        </li>
-      </ul>
+      <ul id="mobile-services" role="list" class="divide-y divide-white/10 border-y border-white/10"></ul>
     </nav>
 
-    <div class="hidden sm:-mx-6 sm:-my-2 sm:block sm:overflow-x-auto sm:whitespace-nowrap lg:-mx-8">
-      <div class="inline-block min-w-full px-6 py-2 align-middle lg:px-8">
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-white/10">
-              <th scope="col" class="py-3 pr-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Service</th>
-              <th scope="col" class="px-4 py-3 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Status</th>
-              <th scope="col" class="py-3 pl-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">URL</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-white/10">
-            <tr>
-              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Portainer</td>
-              <td class="px-4 py-4 text-teal-300 sm:text-sm/6">Live</td>
-              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
-                <a data-service-link data-scheme="https" data-port="9443" href="https://192.168.1.12:9443" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>https://192.168.1.12:9443</span></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Home Assistant</td>
-              <td class="px-4 py-4 text-teal-300 sm:text-sm/6">Live</td>
-              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
-                <a data-service-link data-scheme="http" data-port="8123" href="http://192.168.1.12:8123" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>http://192.168.1.12:8123</span></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Glance</td>
-              <td class="px-4 py-4 text-teal-300 sm:text-sm/6">Live</td>
-              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
-                <a data-service-link data-scheme="http" data-port="8765" href="http://192.168.1.12:8765" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>http://192.168.1.12:8765</span></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="py-4 pr-4 font-medium text-neutral-100 sm:text-sm/6">Immich</td>
-              <td class="px-4 py-4 text-neutral-500 sm:text-sm/6">Idle</td>
-              <td class="py-4 pl-4 tabular-nums sm:text-sm/6">
-                <a data-service-link data-scheme="http" data-port="2283" href="http://192.168.1.12:2283" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400"><span data-url-label>http://192.168.1.12:2283</span></a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="hidden sm:block">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-white/10">
+            <th scope="col" class="py-3 pr-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Service</th>
+            <th scope="col" class="px-4 py-3 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Status</th>
+            <th scope="col" class="px-4 py-3 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Containers</th>
+            <th scope="col" class="py-3 pl-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">URL</th>
+          </tr>
+        </thead>
+        <tbody id="service-table-body" class="divide-y divide-white/10"></tbody>
+      </table>
     </div>
+
+    <section id="other-section" class="hidden">
+      <h2 class="text-lg font-semibold text-neutral-100">Other containers</h2>
+      <ul id="other-containers" role="list" class="mt-3 divide-y divide-white/10 border-y border-white/10"></ul>
+    </section>
+
     <footer class="mt-auto border-t border-white/10 pt-4 text-base/7 text-neutral-500 sm:text-sm/6">
       <a href="https://github.com/thatbeautifuldream/homelab" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">GitHub</a>
     </footer>
@@ -107,11 +61,147 @@
 
   <script>
     const host = window.location.hostname || '192.168.1.12';
-    document.querySelectorAll('[data-service-link]').forEach((link) => {
-      const url = `${link.dataset.scheme}://${host}:${link.dataset.port}`;
-      link.href = url;
-      link.querySelector('[data-url-label]')?.replaceChildren(url);
-    });
+    const STATUS_POLL_MS = 5000;
+    const STALE_AFTER_MS = 30000;
+
+    // Maps each dashboard service to its container names (NAMES column of docker ps).
+    const SERVICE_DEFS = [
+      { name: 'Portainer', scheme: 'https', port: '9443', containers: ['portainer'] },
+      { name: 'Home Assistant', scheme: 'http', port: '8123', containers: ['homeassistant'] },
+      { name: 'Glance', scheme: 'http', port: '8765', containers: ['glance'] },
+      { name: 'Frigate', scheme: 'http', port: '8971', containers: ['frigate', 'frigate-mqtt'] },
+      { name: 'Immich', scheme: 'http', port: '2283', containers: ['immich_server', 'immich_postgres', 'immich_redis', 'immich_machine_learning'] },
+    ];
+
+    // Infrastructure containers hidden from the "Other containers" list.
+    const IGNORED_CONTAINERS = new Set(['homelab-status']);
+
+    const state = { ok: false, generatedAt: null, byName: new Map() };
+
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]
+    ));
+
+    const serviceUrl = (service) => `${service.scheme}://${host}:${service.port}`;
+
+    const BADGES = {
+      live: { label: 'Live', pill: 'bg-teal-400/10 text-teal-300 ring-teal-400/20' },
+      degraded: { label: 'Degraded', pill: 'bg-amber-400/10 text-amber-300 ring-amber-400/20' },
+      down: { label: 'Down', pill: 'bg-rose-400/10 text-rose-300 ring-rose-400/20' },
+      unknown: { label: 'Unknown', pill: 'bg-neutral-400/10 text-neutral-400 ring-neutral-400/20' },
+    };
+
+    const primaryName = (record) => String(record.Names || '').split(',')[0].replace(/^\//, '').trim();
+
+    const deriveServiceStatus = (service) => {
+      const records = service.containers.map((name) => state.byName.get(name)).filter(Boolean);
+      if (records.length === 0) return state.ok ? 'down' : 'unknown';
+      if (records.every((record) => record.State === 'running')) return 'live';
+      if (records.some((record) => record.State === 'running')) return 'degraded';
+      return 'down';
+    };
+
+    const badgeHtml = (status) => {
+      const badge = BADGES[status];
+      return `<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.pill}">${badge.label}</span>`;
+    };
+
+    const containerLines = (service) => service.containers.map((name) => {
+      const record = state.byName.get(name);
+      const detail = record ? (record.Status || record.State) : 'not found';
+      const dot = record && record.State === 'running' ? 'bg-teal-400' : 'bg-rose-400';
+      return `<li class="flex items-center gap-2"><span class="size-1.5 shrink-0 rounded-full ${dot}"></span><span class="truncate">${escapeHtml(name)} <span class="text-neutral-500">${escapeHtml(detail)}</span></span></li>`;
+    }).join('');
+
+    async function fetchStatus() {
+      try {
+        const response = await fetch('/status/status.ndjson', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const records = [];
+        for (const line of (await response.text()).split('\n')) {
+          if (!line) continue;
+          try { records.push(JSON.parse(line)); } catch { /* tolerate torn tail line */ }
+        }
+        const generated = records.find((record) => record.generatedAt);
+        state.generatedAt = generated ? Date.parse(generated.generatedAt) : null;
+        state.byName = new Map(records.filter((record) => primaryName(record)).map((record) => [primaryName(record), record]));
+        state.ok = true;
+      } catch {
+        state.ok = false;
+      }
+      render();
+    }
+
+    function renderMeta() {
+      const meta = document.querySelector('#status-meta');
+      const ageSeconds = state.generatedAt ? Math.max(0, Math.round((Date.now() - state.generatedAt) / 1000)) : null;
+      if (!state.ok) {
+        meta.textContent = 'Docker status unavailable — showing last known state';
+        meta.className = 'text-sm/6 text-amber-300';
+      } else if (ageSeconds !== null && ageSeconds * 1000 > STALE_AFTER_MS) {
+        meta.textContent = `Status data stale — updated ${ageSeconds}s ago`;
+        meta.className = 'text-sm/6 text-amber-300';
+      } else if (ageSeconds !== null) {
+        meta.textContent = `Live from docker ps · updated ${ageSeconds}s ago`;
+        meta.className = 'text-sm/6 text-teal-300';
+      } else {
+        meta.textContent = 'Waiting for Docker status…';
+        meta.className = 'text-sm/6 text-neutral-500';
+      }
+    }
+
+    function renderServices() {
+      document.querySelector('#mobile-services').innerHTML = SERVICE_DEFS.map((service) => `
+        <li class="py-3">
+          <a href="${serviceUrl(service)}" class="flex min-h-16 items-center justify-between gap-4 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
+            <span>${escapeHtml(service.name)}</span>
+            ${badgeHtml(deriveServiceStatus(service))}
+          </a>
+          <ul class="mt-1 flex flex-col gap-0.5 text-sm/6 text-neutral-400">${containerLines(service)}</ul>
+        </li>
+      `).join('');
+
+      document.querySelector('#service-table-body').innerHTML = SERVICE_DEFS.map((service) => `
+        <tr>
+          <td class="py-4 pr-4 align-top font-medium text-neutral-100 sm:text-sm/6">${escapeHtml(service.name)}</td>
+          <td class="px-4 py-4 align-top sm:text-sm/6">${badgeHtml(deriveServiceStatus(service))}</td>
+          <td class="px-4 py-4 align-top sm:text-sm/6"><ul class="flex flex-col gap-1">${containerLines(service)}</ul></td>
+          <td class="py-4 pl-4 align-top tabular-nums sm:text-sm/6"><a href="${serviceUrl(service)}" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">${serviceUrl(service)}</a></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderOther() {
+      const mapped = new Set(SERVICE_DEFS.flatMap((service) => service.containers));
+      const others = [...state.byName.values()]
+        .filter((record) => {
+          const name = primaryName(record);
+          return name && !mapped.has(name) && !IGNORED_CONTAINERS.has(name);
+        })
+        .sort((a, b) => primaryName(a).localeCompare(primaryName(b)));
+
+      const section = document.querySelector('#other-section');
+      if (others.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+      section.classList.remove('hidden');
+      document.querySelector('#other-containers').innerHTML = others.map((record) => {
+        const name = primaryName(record);
+        const dot = record.State === 'running' ? 'bg-teal-400' : 'bg-rose-400';
+        return `<li class="flex items-center justify-between gap-4 py-2.5 text-sm/6"><span class="flex min-w-0 items-center gap-2"><span class="size-1.5 shrink-0 rounded-full ${dot}"></span><span class="truncate">${escapeHtml(name)}</span></span><span class="shrink-0 text-neutral-500">${escapeHtml(record.Status || record.State)}</span></li>`;
+      }).join('');
+    }
+
+    function render() {
+      renderMeta();
+      renderServices();
+      renderOther();
+    }
+
+    fetchStatus();
+    setInterval(fetchStatus, STATUS_POLL_MS);
+    setInterval(renderMeta, 1000);
   </script>
 </body>
 </html>

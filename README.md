@@ -16,6 +16,7 @@ apps/
     compose.yml
     .env
     public/index.html
+    docker-status.sh
 
   portainer/
     compose.yml
@@ -34,6 +35,11 @@ apps/
     .env
     assets/
     config/
+  frigate/
+    compose.yml
+    config/config.yml
+    mosquitto/config/mosquitto.conf
+
 ```
 
 ## Start Portainer
@@ -71,6 +77,11 @@ docker compose up -d
 
 ```bash
 cd apps/glance
+docker compose up -d
+```
+
+```bash
+cd apps/frigate
 docker compose up -d
 ```
 
@@ -113,6 +124,9 @@ Ports:
 8123/tcp  Home Assistant UI/API
 8765/tcp  Glance dashboard
 2283/tcp  Immich UI/API
+8971/tcp  Frigate authenticated UI/API
+8555/tcp  Frigate WebRTC
+8555/udp  Frigate WebRTC
 ```
 
 Root index:
@@ -149,13 +163,66 @@ devices:
   - /dev/serial/by-id/<device-id>:/dev/serial/by-id/<device-id>
 ```
 
+## Frigate
+
+Frigate runs as a standalone Docker Compose app with a local Mosquitto broker for Home Assistant integration.
+
+Open:
+
+```text
+http://<server-ip>:8971
+```
+
+Initial config:
+
+```text
+apps/frigate/config/config.yml
+```
+
+The starter config is safe to boot with `front_door.enabled: false`. After buying/configuring an RTSP-capable camera:
+
+1. Edit `apps/frigate/config/config.yml`.
+2. Replace `rtsp://user:password@192.168.1.50:554/stream1` with the camera's detect/record stream.
+3. Set `front_door.enabled: true`.
+4. Redeploy from `apps/frigate` with `docker compose up -d`.
+
+Home Assistant setup:
+
+1. Add the MQTT integration in Home Assistant with broker `127.0.0.1`, port `1883`, no username/password.
+2. Install the official Frigate integration through HACS.
+3. Add the Frigate integration using URL `http://127.0.0.1:5000`.
+4. Use Frigate-created `camera`, `sensor`, and `binary_sensor` entities for alerts and automations.
+
+Ports `1883`, `5000`, and `8554` are bound to localhost only. Port `8971` is the LAN UI. Port `8555` is exposed for WebRTC.
+
+Cheap camera requirements:
+
+- RTSP stream support.
+- Prefer wired Ethernet or strong 5 GHz Wi-Fi.
+- Set a lower-resolution substream around 720p/5fps for detection.
+- Keep vendor cloud features disabled if the camera allows it.
+
+This host has Intel graphics, so the config uses VAAPI decode and OpenVINO detection. If Frigate exits with `/dev/dri/renderD128` errors, verify the Intel render device exists on the Docker host.
+
+## Home Index Status
+
+The homelab index shows live service status derived from `docker ps`.
+
+- The `homelab-status` sidecar runs `apps/home/docker-status.sh`.
+- It snapshots `docker ps -a` into the `home_status` volume as `/status/status.ndjson`: on every container event (`docker events`) and on a `STATUS_INTERVAL` timer (default 10s).
+- The index page polls `/status/status.ndjson` every 5 seconds.
+- nginx only serves the generated file; the Docker socket is mounted into the sidecar, never exposed over HTTP.
+
+To add a service to the dashboard, extend `SERVICE_DEFS` in `apps/home/public/index.html` with its container names.
+
 ## Current Apps
 
-- Home: static server index
+- Home: service index with live container status from `docker ps`
 - Portainer: Docker management UI
 - Home Assistant: home automation
 - Immich: photo and video backup
 - Glance: personal dashboard
+- Frigate: local AI NVR with MQTT integration for Home Assistant
 
 Pi-hole was intentionally removed.
 
@@ -165,4 +232,5 @@ Pi-hole was intentionally removed.
 - Set `DB_PASSWORD` in `apps/immich/.env` before running Immich.
 - Set `TZ` in `apps/home-assistant/.env` before running Home Assistant.
 - Keep persistent app data in Docker volumes or explicit host paths.
+- Frigate media under `apps/frigate/media/` can grow quickly; back it up separately or exclude recordings from routine backups.
 - Back up Portainer data and app volumes separately from this repo.

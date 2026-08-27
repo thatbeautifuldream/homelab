@@ -16,6 +16,9 @@ allow_port 9443 tcp "portainer https"
 allow_port 8123 tcp "home assistant"
 allow_port 8765 tcp "glance"
 allow_port 2283 tcp "immich"
+allow_port 8971 tcp "frigate ui"
+allow_port 8555 tcp "frigate webrtc"
+allow_port 8555 udp "frigate webrtc"
 
 ufw status verbose
 

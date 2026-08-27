@@ -29,6 +29,7 @@ if [ "${CHECK_ALL:-0}" = "1" ]; then
   printf '\nOptional app endpoint checks by IP:\n'
   check_http "http://${HOST_IP}:8765"
   check_http "http://${HOST_IP}:2283"
+  check_http "http://${HOST_IP}:8971"
 fi
 
 cat <<EOF
@@ -38,6 +39,7 @@ Run these from another device on the same network:
   curl http://${HOST_IP}:80
   curl -k https://${HOST_IP}:9443
   curl http://${HOST_IP}:8123
+  curl http://${HOST_IP}:8971
 
 If IP fails: the laptop is not on the same reachable LAN, AP/client isolation is enabled, a VPN/proxy route is intercepting traffic, or a firewall/router rule is blocking peer access.
 EOF
