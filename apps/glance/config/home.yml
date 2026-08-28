@@ -56,7 +56,7 @@
     - size: small
       widgets:
         - type: weather
-          location: London, United Kingdom
+          location: Bengaluru, India
           units: metric # alternatively "imperial"
           hour-format: 12h # alternatively "24h"
           # Optionally hide the location from being displayed in the widget

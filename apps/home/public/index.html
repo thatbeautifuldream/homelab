@@ -1,82 +1,747 @@
 <!doctype html>
-<html lang="en" class="scheme-only-dark antialiased">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Homelab</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style type="text/tailwindcss">
+  <style>
+    html:not(.ui-ready) body {
+      opacity: 0;
+    }
+  </style>
+  <script>
+    (() => {
+      const storedTheme = localStorage.getItem('homelab-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.dataset.scheme = theme === 'light' ? 'light' : 'dark';
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
+  <style>
     @font-face {
-      font-family: InterVariable;
+      font-family: 'JetBrains Mono';
       font-style: normal;
-      font-weight: 100 900;
+      font-weight: 400;
       font-display: swap;
-      src: url("https://rsms.me/inter/font-files/InterVariable.woff2") format("woff2");
+      src: url('https://cdn.jsdelivr.net/gh/glanceapp/glance@main/internal/glance/static/fonts/JetBrainsMono-Regular.woff2') format('woff2');
     }
 
-    @theme {
-      --font-sans: InterVariable, ui-sans-serif, system-ui, sans-serif;
-      --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01", "ss03";
+    :root {
+      font-size: 10px;
+
+      --scheme: ;
+      --bgh: 240;
+      --bgs: 8%;
+      --bgl: 9%;
+      --bghs: var(--bgh), var(--bgs);
+      --cm: 1;
+      --tsm: 1;
+
+      --widget-gap: 23px;
+      --widget-content-vertical-padding: 15px;
+      --widget-content-horizontal-padding: 17px;
+      --widget-content-padding: var(--widget-content-vertical-padding) var(--widget-content-horizontal-padding);
+      --content-bounds-padding: 15px;
+      --border-radius: 5px;
+      --mobile-navigation-height: 50px;
+
+      --color-primary: hsl(43, 50%, 70%);
+      --color-positive: var(--color-primary);
+      --color-negative: hsl(0, 70%, 70%);
+      --color-background: hsl(var(--bghs), var(--bgl));
+      --color-widget-background-hsl-values: var(--bghs), calc(var(--bgl) + 1%);
+      --color-widget-background: hsl(var(--color-widget-background-hsl-values));
+      --color-separator: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 4% * var(--cm))));
+      --color-widget-content-border: hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 4%)));
+      --color-widget-background-highlight: hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 4%)));
+      --color-progress-border: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 10% * var(--cm))));
+      --color-progress-value: hsl(var(--bgh), calc(var(--bgs) * var(--tsm)), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 26% * var(--cm))));
+      --color-graph-gridlines: hsl(var(--bghs), calc(var(--scheme) ((var(--scheme) var(--bgl)) + 6% * var(--cm))));
+
+      --ths: var(--bgh), calc(var(--bgs) * var(--tsm));
+      --color-text-highlight: hsl(var(--ths), calc(var(--scheme) var(--cm) * 85%));
+      --color-text-paragraph: hsl(var(--ths), calc(var(--scheme) var(--cm) * 73%));
+      --color-text-base: hsl(var(--ths), calc(var(--scheme) var(--cm) * 58%));
+      --color-text-base-muted: hsl(var(--ths), calc(var(--scheme) var(--cm) * 52%));
+      --color-text-subdue: hsl(var(--ths), calc(var(--scheme) var(--cm) * 35%));
+
+      --font-size-h1: 1.7rem;
+      --font-size-h2: 1.6rem;
+      --font-size-h3: 1.5rem;
+      --font-size-h4: 1.4rem;
+      --font-size-base: 1.3rem;
+      --font-size-h5: 1.2rem;
+      --font-size-h6: 1.1rem;
     }
 
-    .scheme-only-dark {
-      color-scheme: dark;
+    :root[data-scheme='light'] {
+      --scheme: 100% -;
+      --bgh: 220;
+      --bgs: 23%;
+      --bgl: 95%;
+      --cm: 1;
+      --tsm: 1;
+      --color-primary: hsl(220, 91%, 54%);
+      --color-positive: hsl(109, 58%, 40%);
+      --color-negative: hsl(347, 87%, 44%);
+    }
+
+    ::selection {
+      background-color: hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 20%)));
+      color: var(--color-text-highlight);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-text-subdue);
+      border-radius: var(--border-radius);
+    }
+
+    ::-webkit-scrollbar {
+      background: var(--color-background);
+      height: 5px;
+      width: 10px;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 0.1rem;
+      border-radius: var(--border-radius);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    html {
+      scrollbar-color: var(--color-text-subdue) transparent;
+      scroll-behavior: smooth;
+    }
+
+    html, body, .body-content {
+      min-height: 100%;
+    }
+
+    body {
+      font-size: var(--font-size-base);
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-ligatures: none;
+      line-height: 1.6;
+      color: var(--color-text-base);
+      background-color: var(--color-background);
+      overflow-y: scroll;
+    }
+
+    h1, h2, h3, h4, h5, p, dl, dd, ul {
+      font: inherit;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      overflow-wrap: break-word;
+    }
+
+    button {
+      font: inherit;
+      border: 0;
+      cursor: pointer;
+      background: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .visually-hidden {
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .color-highlight { color: var(--color-text-highlight); }
+    .color-paragraph { color: var(--color-text-paragraph); }
+    .color-base { color: var(--color-text-base); }
+    .color-subdue { color: var(--color-text-subdue); }
+    .color-negative { color: var(--color-negative); }
+    .color-positive { color: var(--color-positive); }
+    .color-primary { color: var(--color-primary); }
+
+    .body-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content-bounds {
+      max-width: 1600px;
+      width: 100%;
+      margin-inline: auto;
+      padding: 0 var(--content-bounds-padding);
+    }
+
+    .header-container {
+      margin-top: calc(var(--widget-gap) / 2);
+      --header-height: 45px;
+      --header-items-gap: 2.5rem;
+    }
+
+    .header {
+      display: flex;
+      height: var(--header-height);
+      gap: var(--header-items-gap);
+      padding-inline: var(--widget-content-horizontal-padding);
+    }
+
+    .widget-content-frame,
+    .widget-content {
+      background: var(--color-widget-background);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--color-widget-content-border);
+      box-shadow: 0 3px 0 0 hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
+    }
+
+    .nav {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      gap: var(--header-items-gap);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav::-webkit-scrollbar,
+    .hide-scrollbars::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scrollbars {
+      scrollbar-width: none;
+    }
+
+    .nav-item {
+      display: block;
+      height: 100%;
+      border-bottom: 2px solid transparent;
+      transition: color .3s, border-color .3s;
+      font-size: var(--font-size-h3);
+      line-height: var(--header-height);
+      flex-shrink: 0;
+    }
+
+    .nav-item:not(.nav-item-current):hover {
+      border-bottom-color: var(--color-text-subdue);
+      color: var(--color-text-highlight);
+    }
+
+    .nav-item.nav-item-current {
+      border-bottom-color: var(--color-primary);
+      color: var(--color-text-highlight);
+    }
+
+    .theme-area {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    .theme-preset {
+      background-color: var(--color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      height: 2rem;
+      padding-inline: 0.5rem;
+      border-radius: 0.3rem;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .theme-color {
+      background-color: var(--color);
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 0.2rem;
+    }
+
+    .current-theme-preview {
+      opacity: 0.4;
+      transition: opacity .3s;
+    }
+
+    .theme-toggle:hover .current-theme-preview,
+    .theme-toggle:focus-visible .current-theme-preview {
+      opacity: 1;
+    }
+
+    .page {
+      flex: 1;
+      padding-block: var(--widget-gap);
+    }
+
+    .page-columns {
+      display: flex;
+      gap: var(--widget-gap);
+      align-items: flex-start;
+    }
+
+    .page-column-small {
+      width: 300px;
+      flex-shrink: 0;
+    }
+
+    .page-column-full {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .widget + .widget {
+      margin-top: var(--widget-gap);
+    }
+
+    .widget-header {
+      padding: 0 calc(var(--widget-content-horizontal-padding) + 1px);
+      font-size: var(--font-size-h4);
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--color-text-base-muted);
+      text-transform: uppercase;
+    }
+
+    .widget-content {
+      container-type: inline-size;
+      container-name: widget;
+      padding: var(--widget-content-padding);
+    }
+
+    .headline {
+      color: var(--color-text-highlight);
+      font-size: 2.6rem;
+      line-height: 1.18;
+      letter-spacing: -0.04em;
+      max-width: 14ch;
+    }
+
+    .paragraph {
+      color: var(--color-text-paragraph);
+      max-width: 34ch;
+    }
+
+    .dynamic-columns {
+      --list-half-gap: 0.5rem;
+      gap: var(--widget-content-vertical-padding) var(--widget-content-horizontal-padding);
+      display: grid;
+      grid-template-columns: repeat(var(--columns-per-row), minmax(0, 1fr));
+    }
+
+    .dynamic-columns > * {
+      padding-left: var(--widget-content-horizontal-padding);
+      border-left: 1px solid var(--color-separator);
+      min-width: 0;
+    }
+
+    .dynamic-columns > *:first-child {
+      padding-top: 0;
+      border-top: none;
+      border-left: none;
+      padding-left: 0;
+    }
+
+    .dynamic-columns:has(> :nth-child(1)) { --columns-per-row: 1; }
+    .dynamic-columns:has(> :nth-child(2)) { --columns-per-row: 2; }
+    .dynamic-columns:has(> :nth-child(3)) { --columns-per-row: 3; }
+    .dynamic-columns:has(> :nth-child(4)) { --columns-per-row: 4; }
+
+    .stat-title,
+    .eyebrow {
+      color: var(--color-text-subdue);
+      text-transform: uppercase;
+    }
+
+    .stat-value {
+      color: var(--color-text-highlight);
+      font-size: var(--font-size-h2);
+      font-variant-numeric: tabular-nums;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-meta {
+      color: var(--color-text-subdue);
+      min-width: 31ch;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-meta.status-ok { color: var(--color-positive); }
+    .status-meta.status-warn { color: var(--color-primary); }
+
+    .service-list {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--widget-content-vertical-padding) * 0.7);
+    }
+
+    .service-card {
+      display: flex;
+      min-width: 0;
+      gap: 1.3rem;
+      padding-bottom: calc(var(--widget-content-vertical-padding) * 0.7);
+      border-bottom: 1px solid var(--color-separator);
+    }
+
+    .service-card:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .service-body {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .service-title-row,
+    .section-row,
+    .port-row,
+    .other-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-width: 0;
+    }
+
+    .service-title {
+      color: var(--color-text-highlight);
+      font-size: var(--font-size-h3);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .service-cue,
+    .service-url,
+    .container-detail,
+    .port-scheme,
+    .footer {
+      color: var(--color-text-base-muted);
+    }
+
+    .service-url,
+    .container-name,
+    .other-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .service-port,
+    .port-number,
+    .link-primary {
+      color: var(--color-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: var(--border-radius);
+      padding: 0.1rem 0.6rem;
+      font-size: var(--font-size-h5);
+      color: var(--badge-color);
+      background: color-mix(in srgb, var(--badge-color) 10%, transparent);
+      border: 1px solid color-mix(in srgb, var(--badge-color) 24%, transparent);
+      flex-shrink: 0;
+    }
+
+    .dot {
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      background: var(--dot-color);
+      flex-shrink: 0;
+    }
+
+    .status-live { --badge-color: var(--color-positive); --dot-color: var(--color-positive); }
+    .status-degraded { --badge-color: var(--color-primary); --dot-color: var(--color-primary); }
+    .status-down { --badge-color: var(--color-negative); --dot-color: var(--color-negative); }
+    .status-unknown { --badge-color: var(--color-text-subdue); --dot-color: var(--color-text-subdue); }
+
+    .container-list,
+    .feed-list,
+    .port-list,
+    .other-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .container-line,
+    .feed-line {
+      display: flex;
+      min-width: 0;
+      gap: 0.7rem;
+      align-items: center;
+    }
+
+    .feed-line {
+      align-items: flex-start;
+    }
+
+    .feed-line .dot {
+      margin-top: 0.7rem;
+    }
+
+
+    .port-row,
+    .other-row {
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--color-separator);
+    }
+
+    .port-row:last-child,
+    .other-row:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: calc(var(--widget-gap) * 1.5);
+      padding-top: calc(var(--widget-gap) / 2);
+    }
+
+    @keyframes contentEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+    }
+
+    .content-ready {
+      animation: contentEntrance .3s cubic-bezier(0.25, 1, 0.5, 1) backwards;
+    }
+
+    @container widget (max-width: 599px) {
+      .dynamic-columns {
+        gap: 0;
+      }
+
+      .dynamic-columns:has(> :nth-child(1)) {
+        --columns-per-row: 1;
+      }
+
+      .dynamic-columns > * {
+        border-left: none;
+        padding-left: 0;
+      }
+
+      .dynamic-columns > *:not(:first-child) {
+        margin-top: 1rem;
+        border-top: 1px solid var(--color-separator);
+        padding-top: 0.5rem;
+      }
+    }
+
+    @container widget (min-width: 600px) and (max-width: 849px) {
+      .dynamic-columns:has(> :nth-child(2)) { --columns-per-row: 2; }
+      .dynamic-columns > :nth-child(2n-1) {
+        border-left: none;
+        padding-left: 0;
+      }
+    }
+
+    @media (max-width: 1190px) {
+      .header-container {
+        --header-height: 50px;
+      }
+
+      .page-columns {
+        flex-direction: column;
+      }
+
+      .page-column-small,
+      .page-column-full {
+        width: 100%;
+        flex-shrink: 1;
+      }
+
+      .status-meta {
+        min-width: 0;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 550px) {
+      :root {
+        font-size: 9.4px;
+        --widget-gap: 15px;
+        --widget-content-vertical-padding: 10px;
+        --widget-content-horizontal-padding: 10px;
+        --content-bounds-padding: 10px;
+      }
+
+      .header {
+        gap: 1.3rem;
+      }
+
+      .theme-area {
+        gap: 1rem;
+      }
+
+      .theme-preset:not(.current-theme-preview) {
+        display: none;
+      }
+
+      .footer,
+      .section-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
-<body class="min-h-dvh bg-neutral-950 font-sans text-neutral-100">
-  <main class="isolate mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-5 p-4 sm:p-6 lg:p-8">
-    <div class="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
-      <h1 class="text-3xl font-semibold tracking-tight text-balance text-neutral-50">Homelab</h1>
-      <p id="status-meta" class="text-sm/6 text-neutral-500">Checking Docker status…</p>
+<body>
+  <div class="body-content">
+    <div class="header-container content-bounds">
+      <header class="header widget-content-frame">
+        <nav class="nav hide-scrollbars" aria-label="Primary">
+          <a href="/" class="nav-item nav-item-current" aria-current="page">Home</a>
+          <a id="glance-nav-link" href="#" class="nav-item">Glance</a>
+        </nav>
+        <div class="theme-area">
+          <button id="theme-toggle" type="button" class="theme-toggle" aria-label="Switch theme">
+            <span class="current-theme-preview theme-preset" style="--color: var(--color-background)" aria-hidden="true">
+              <span class="theme-color" style="--color: var(--color-primary)"></span>
+              <span class="theme-color" style="--color: var(--color-text-base)"></span>
+              <span class="theme-color" style="--color: var(--color-negative)"></span>
+            </span>
+            <span id="theme-label" class="visually-hidden">Dark</span>
+          </button>
+        </div>
+      </header>
     </div>
 
-    <nav aria-label="Services" class="sm:hidden">
-      <ul id="mobile-services" role="list" class="divide-y divide-white/10 border-y border-white/10"></ul>
-    </nav>
+    <main class="page content-bounds" id="page">
+      <div class="page-columns content-ready">
+        <aside class="page-column-small">
+          <section class="widget">
+            <div class="widget-header"><h2>System</h2></div>
+            <div class="widget-content">
+              <h1 class="headline">Homelab control room</h1>
+              <p class="paragraph" style="margin-top: 1.5rem">A Docker-aware launchpad for the services that keep the house running.</p>
+              <dl class="dynamic-columns" style="margin-top: 2rem">
+                <div>
+                  <dt class="stat-title">Host</dt>
+                  <dd id="host-value" class="stat-value">—</dd>
+                </div>
+                <div>
+                  <dt class="stat-title">Poll</dt>
+                  <dd class="stat-value">5s</dd>
+                </div>
+              </dl>
+            </div>
+          </section>
 
-    <div class="hidden sm:block">
-      <table class="w-full">
-        <thead>
-          <tr class="border-b border-white/10">
-            <th scope="col" class="py-3 pr-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Service</th>
-            <th scope="col" class="px-4 py-3 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Status</th>
-            <th scope="col" class="px-4 py-3 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">Containers</th>
-            <th scope="col" class="py-3 pl-4 text-left font-medium whitespace-nowrap text-neutral-400 sm:text-sm/6">URL</th>
-          </tr>
-        </thead>
-        <tbody id="service-table-body" class="divide-y divide-white/10"></tbody>
-      </table>
-    </div>
+          <section class="widget">
+            <div class="widget-header"><h2>Status feed</h2></div>
+            <div class="widget-content">
+              <ul role="list" id="signal-feed" class="feed-list"></ul>
+            </div>
+          </section>
+        </aside>
 
-    <section id="other-section" class="hidden">
-      <h2 class="text-lg font-semibold text-neutral-100">Other containers</h2>
-      <ul id="other-containers" role="list" class="mt-3 divide-y divide-white/10 border-y border-white/10"></ul>
-    </section>
+        <section class="page-column-full">
+          <div class="section-row" style="margin-bottom: 0.9rem; padding-inline: calc(var(--widget-content-horizontal-padding) + 1px)">
+            <div>
+              <p class="eyebrow">Services</p>
+              <h2 class="service-title" style="margin-top: 0.2rem">Launch board</h2>
+            </div>
+            <p id="status-meta" class="status-meta" aria-live="polite">Checking Docker status…</p>
+          </div>
 
-    <footer class="mt-auto border-t border-white/10 pt-4 text-base/7 text-neutral-500 sm:text-sm/6">
-      <a href="https://github.com/thatbeautifuldream/homelab" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">GitHub</a>
+          <section class="widget">
+            <div class="widget-content">
+              <div id="summary-grid" class="dynamic-columns"></div>
+            </div>
+          </section>
+
+          <section class="widget">
+            <div class="widget-header"><h2>Services</h2></div>
+            <div class="widget-content">
+              <div id="service-grid" class="service-list"></div>
+            </div>
+          </section>
+
+          <section id="other-section" class="widget" hidden>
+            <div class="widget-header">
+              <h2>Other containers</h2>
+              <span id="other-count" class="stat-title"></span>
+            </div>
+            <div class="widget-content">
+              <ul id="other-containers" role="list" class="other-list"></ul>
+            </div>
+          </section>
+        </section>
+
+        <aside class="page-column-small">
+          <section class="widget">
+            <div class="widget-header"><h2>Ports</h2></div>
+            <div class="widget-content">
+              <ul id="port-list" role="list" class="port-list"></ul>
+            </div>
+          </section>
+
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer content-bounds">
+      <p>Local services · Docker status sidecar</p>
+      <a href="https://github.com/thatbeautifuldream/homelab" class="link-primary">GitHub</a>
     </footer>
-  </main>
+  </div>
 
   <script>
     const host = window.location.hostname || '192.168.1.12';
     const STATUS_POLL_MS = 5000;
     const STALE_AFTER_MS = 30000;
+    const THEME_STORAGE_KEY = 'homelab-theme';
 
-    // Maps each dashboard service to its container names (NAMES column of docker ps).
     const SERVICE_DEFS = [
-      { name: 'Portainer', scheme: 'https', port: '9443', containers: ['portainer'] },
-      { name: 'Home Assistant', scheme: 'http', port: '8123', containers: ['homeassistant'] },
-      { name: 'Glance', scheme: 'http', port: '8765', containers: ['glance'] },
-      { name: 'Frigate', scheme: 'http', port: '8971', containers: ['frigate', 'frigate-mqtt'] },
-      { name: 'Immich', scheme: 'http', port: '2283', containers: ['immich_server', 'immich_postgres', 'immich_redis', 'immich_machine_learning'] },
+      { name: 'Portainer', scheme: 'https', port: '9443', containers: ['portainer'], cue: 'Edge admin' },
+      { name: 'Home Assistant', scheme: 'http', port: '8123', containers: ['homeassistant'], cue: 'Automation' },
+      { name: 'Glance', scheme: 'http', port: '8765', containers: ['glance'], cue: 'Personal dash' },
+      { name: 'Frigate', scheme: 'http', port: '8971', containers: ['frigate', 'frigate-mqtt'], cue: 'Local NVR' },
+      { name: 'Immich', scheme: 'http', port: '2283', containers: ['immich_server', 'immich_postgres', 'immich_redis', 'immich_machine_learning'], cue: 'Photo vault' },
     ];
 
-    // Infrastructure containers hidden from the "Other containers" list.
     const IGNORED_CONTAINERS = new Set(['homelab-status']);
 
     const state = { ok: false, generatedAt: null, byName: new Map() };
+
+    const BADGES = {
+      live: { label: 'Live', className: 'status-live' },
+      degraded: { label: 'Degraded', className: 'status-degraded' },
+      down: { label: 'Down', className: 'status-down' },
+      unknown: { label: 'Unknown', className: 'status-unknown' },
+    };
 
     const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => (
       { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]
@@ -84,14 +749,9 @@
 
     const serviceUrl = (service) => `${service.scheme}://${host}:${service.port}`;
 
-    const BADGES = {
-      live: { label: 'Live', pill: 'bg-teal-400/10 text-teal-300 ring-teal-400/20' },
-      degraded: { label: 'Degraded', pill: 'bg-amber-400/10 text-amber-300 ring-amber-400/20' },
-      down: { label: 'Down', pill: 'bg-rose-400/10 text-rose-300 ring-rose-400/20' },
-      unknown: { label: 'Unknown', pill: 'bg-neutral-400/10 text-neutral-400 ring-neutral-400/20' },
-    };
-
     const primaryName = (record) => String(record.Names || '').split(',')[0].replace(/^\//, '').trim();
+
+    const allRecords = () => [...state.byName.values()];
 
     const deriveServiceStatus = (service) => {
       const records = service.containers.map((name) => state.byName.get(name)).filter(Boolean);
@@ -101,17 +761,36 @@
       return 'down';
     };
 
+    const summary = () => {
+      const statuses = SERVICE_DEFS.map(deriveServiceStatus);
+      const mapped = new Set(SERVICE_DEFS.flatMap((service) => service.containers));
+      const others = allRecords().filter((record) => {
+        const name = primaryName(record);
+        return name && !mapped.has(name) && !IGNORED_CONTAINERS.has(name);
+      });
+      return {
+        live: statuses.filter((status) => status === 'live').length,
+        degraded: statuses.filter((status) => status === 'degraded').length,
+        down: statuses.filter((status) => status === 'down').length,
+        other: others.length,
+      };
+    };
+
     const badgeHtml = (status) => {
       const badge = BADGES[status];
-      return `<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.pill}">${badge.label}</span>`;
+      return `<span class="badge ${badge.className}">${badge.label}</span>`;
     };
+
+    const dotHtml = (status) => `<span class="dot ${BADGES[status].className}" aria-hidden="true"></span>`;
 
     const containerLines = (service) => service.containers.map((name) => {
       const record = state.byName.get(name);
       const detail = record ? (record.Status || record.State) : 'not found';
-      const dot = record && record.State === 'running' ? 'bg-teal-400' : 'bg-rose-400';
-      return `<li class="flex items-center gap-2"><span class="size-1.5 shrink-0 rounded-full ${dot}"></span><span class="truncate">${escapeHtml(name)} <span class="text-neutral-500">${escapeHtml(detail)}</span></span></li>`;
+      const status = record && record.State === 'running' ? 'live' : 'down';
+      return `<li class="container-line">${dotHtml(status)}<span class="container-name color-highlight">${escapeHtml(name)}</span><span class="container-detail">${escapeHtml(detail)}</span></li>`;
     }).join('');
+
+    const ageSeconds = () => state.generatedAt ? Math.max(0, Math.round((Date.now() - state.generatedAt) / 1000)) : null;
 
     async function fetchStatus() {
       try {
@@ -134,46 +813,92 @@
 
     function renderMeta() {
       const meta = document.querySelector('#status-meta');
-      const ageSeconds = state.generatedAt ? Math.max(0, Math.round((Date.now() - state.generatedAt) / 1000)) : null;
+      const age = ageSeconds();
+      meta.className = 'status-meta';
       if (!state.ok) {
         meta.textContent = 'Docker status unavailable — showing last known state';
-        meta.className = 'text-sm/6 text-amber-300';
-      } else if (ageSeconds !== null && ageSeconds * 1000 > STALE_AFTER_MS) {
-        meta.textContent = `Status data stale — updated ${ageSeconds}s ago`;
-        meta.className = 'text-sm/6 text-amber-300';
-      } else if (ageSeconds !== null) {
-        meta.textContent = `Live from docker ps · updated ${ageSeconds}s ago`;
-        meta.className = 'text-sm/6 text-teal-300';
+        meta.classList.add('status-warn');
+      } else if (age !== null && age * 1000 > STALE_AFTER_MS) {
+        meta.textContent = `Status data stale · updated ${age}s ago`;
+        meta.classList.add('status-warn');
+      } else if (age !== null) {
+        meta.textContent = `Live from docker ps · updated ${age}s ago`;
+        meta.classList.add('status-ok');
       } else {
         meta.textContent = 'Waiting for Docker status…';
-        meta.className = 'text-sm/6 text-neutral-500';
       }
     }
 
-    function renderServices() {
-      document.querySelector('#mobile-services').innerHTML = SERVICE_DEFS.map((service) => `
-        <li class="py-3">
-          <a href="${serviceUrl(service)}" class="flex min-h-16 items-center justify-between gap-4 text-base/7 font-medium text-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">
-            <span>${escapeHtml(service.name)}</span>
-            ${badgeHtml(deriveServiceStatus(service))}
-          </a>
-          <ul class="mt-1 flex flex-col gap-0.5 text-sm/6 text-neutral-400">${containerLines(service)}</ul>
-        </li>
+    function renderSummary() {
+      const data = summary();
+      const tiles = [
+        { label: 'Live services', value: data.live, status: 'live' },
+        { label: 'Degraded', value: data.degraded, status: 'degraded' },
+        { label: 'Down', value: data.down, status: 'down' },
+        { label: 'Other', value: data.other, status: 'unknown' },
+      ];
+      document.querySelector('#summary-grid').innerHTML = tiles.map((tile) => `
+        <div>
+          <p class="stat-title">${tile.label}</p>
+          <p class="stat-value ${BADGES[tile.status].className}" style="color: var(--badge-color)">${tile.value}</p>
+        </div>
       `).join('');
+    }
 
-      document.querySelector('#service-table-body').innerHTML = SERVICE_DEFS.map((service) => `
-        <tr>
-          <td class="py-4 pr-4 align-top font-medium text-neutral-100 sm:text-sm/6">${escapeHtml(service.name)}</td>
-          <td class="px-4 py-4 align-top sm:text-sm/6">${badgeHtml(deriveServiceStatus(service))}</td>
-          <td class="px-4 py-4 align-top sm:text-sm/6"><ul class="flex flex-col gap-1">${containerLines(service)}</ul></td>
-          <td class="py-4 pl-4 align-top tabular-nums sm:text-sm/6"><a href="${serviceUrl(service)}" class="text-teal-300 hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-400">${serviceUrl(service)}</a></td>
-        </tr>
+    function renderServices() {
+      document.querySelector('#service-grid').innerHTML = SERVICE_DEFS.map((service) => {
+        const status = deriveServiceStatus(service);
+        return `
+          <a href="${serviceUrl(service)}" class="service-card">
+            <div class="service-body">
+              <div class="service-title-row">
+                <div class="service-body">
+                  <p class="service-cue">${escapeHtml(service.cue)}</p>
+                  <h3 class="service-title">${escapeHtml(service.name)}</h3>
+                </div>
+                ${badgeHtml(status)}
+              </div>
+              <div class="service-title-row" style="margin-top: 1rem">
+                <div class="service-body">
+                  <p class="service-port">:${escapeHtml(service.port)}</p>
+                  <p class="service-url">${escapeHtml(serviceUrl(service))}</p>
+                </div>
+              </div>
+              <ul role="list" class="container-list">${containerLines(service)}</ul>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    function renderFeed() {
+      const age = ageSeconds();
+      const rows = [
+        { label: state.ok ? 'Feed online' : 'Feed offline', detail: state.ok ? 'status.ndjson reachable' : 'waiting for sidecar', status: state.ok ? 'live' : 'unknown' },
+        { label: age === null ? 'No timestamp' : `${age}s old`, detail: 'last Docker snapshot', status: age !== null && age * 1000 <= STALE_AFTER_MS ? 'live' : 'degraded' },
+        { label: `${allRecords().length} containers`, detail: 'visible to docker ps', status: state.ok ? 'live' : 'unknown' },
+      ];
+      document.querySelector('#signal-feed').innerHTML = rows.map((row) => `
+        <li class="feed-line">${dotHtml(row.status)}<span class="service-body"><span class="color-highlight">${escapeHtml(row.label)}</span><br><span class="container-detail">${escapeHtml(row.detail)}</span></span></li>
       `).join('');
+    }
+
+    function renderPorts() {
+      document.querySelector('#port-list').innerHTML = SERVICE_DEFS.map((service) => {
+        const status = deriveServiceStatus(service);
+        return `
+          <li class="port-row">
+            <span class="service-body"><span class="color-highlight">${escapeHtml(service.name)}</span><br><span class="port-scheme">${escapeHtml(service.scheme)}</span></span>
+            <span class="port-number">:${escapeHtml(service.port)}</span>
+            ${badgeHtml(status)}
+          </li>
+        `;
+      }).join('');
     }
 
     function renderOther() {
       const mapped = new Set(SERVICE_DEFS.flatMap((service) => service.containers));
-      const others = [...state.byName.values()]
+      const others = allRecords()
         .filter((record) => {
           const name = primaryName(record);
           return name && !mapped.has(name) && !IGNORED_CONTAINERS.has(name);
@@ -182,24 +907,75 @@
 
       const section = document.querySelector('#other-section');
       if (others.length === 0) {
-        section.classList.add('hidden');
+        section.hidden = true;
         return;
       }
-      section.classList.remove('hidden');
+      section.hidden = false;
+      document.querySelector('#other-count').textContent = String(others.length);
       document.querySelector('#other-containers').innerHTML = others.map((record) => {
         const name = primaryName(record);
-        const dot = record.State === 'running' ? 'bg-teal-400' : 'bg-rose-400';
-        return `<li class="flex items-center justify-between gap-4 py-2.5 text-sm/6"><span class="flex min-w-0 items-center gap-2"><span class="size-1.5 shrink-0 rounded-full ${dot}"></span><span class="truncate">${escapeHtml(name)}</span></span><span class="shrink-0 text-neutral-500">${escapeHtml(record.Status || record.State)}</span></li>`;
+        const status = record.State === 'running' ? 'live' : 'down';
+        return `<li class="other-row">${dotHtml(status)}<span class="other-name service-body color-highlight">${escapeHtml(name)}</span><span class="container-detail">${escapeHtml(record.Status || record.State)}</span></li>`;
       }).join('');
     }
 
+    function applyTheme(theme) {
+      document.documentElement.dataset.scheme = theme === 'light' ? 'light' : 'dark';
+      document.documentElement.style.colorScheme = theme;
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+      document.querySelector('#theme-label').textContent = theme === 'dark' ? 'Light' : 'Dark';
+      document.querySelector('#theme-toggle').setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+    }
+
+    function currentTheme() {
+      return document.documentElement.dataset.scheme === 'light' ? 'light' : 'dark';
+    }
+
+    function toggleTheme() {
+      applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+    }
+
     function render() {
+      document.querySelector('#host-value').textContent = host;
+      document.querySelector('#glance-nav-link').href = serviceUrl(SERVICE_DEFS.find((service) => service.name === 'Glance'));
       renderMeta();
+      renderSummary();
       renderServices();
+      renderFeed();
+      renderPorts();
       renderOther();
     }
 
-    fetchStatus();
+    document.querySelector('#theme-toggle').addEventListener('click', toggleTheme);
+    document.addEventListener('keydown', (event) => {
+      const target = event.target;
+      const isTyping = target && (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable);
+      if (isTyping || event.altKey || event.ctrlKey || event.metaKey || event.key.toLowerCase() !== 'd') return;
+      event.preventDefault();
+      toggleTheme();
+    });
+
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (storedTheme === 'dark' || storedTheme === 'light') {
+      applyTheme(storedTheme);
+    } else {
+      applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      localStorage.removeItem(THEME_STORAGE_KEY);
+    }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+      if (!localStorage.getItem(THEME_STORAGE_KEY)) applyTheme(event.matches ? 'dark' : 'light');
+    });
+
+    const reveal = () => requestAnimationFrame(() => {
+      document.documentElement.classList.add('ui-ready');
+    });
+
+    Promise.all([
+      document.fonts ? document.fonts.ready : Promise.resolve(),
+      fetchStatus(),
+    ]).then(reveal, reveal);
+
     setInterval(fetchStatus, STATUS_POLL_MS);
     setInterval(renderMeta, 1000);
   </script>
